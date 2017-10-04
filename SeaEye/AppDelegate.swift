@@ -11,10 +11,11 @@ import Foundation
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
-
+    
+    @IBOutlet weak var MenuBar: NSMenu! // 🤔 Allows copy pasta
     var statusBarItem : NSStatusItem = NSStatusItem()
     var statusBarIconViewController : SeaEyeIconController!
-    
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         NSUserNotificationCenter.default.delegate = self
         self.initialSetup()
@@ -34,10 +35,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
         let userInfo = notification.userInfo
 
-        if let url = userInfo!["url"] as? String{
+        center.removeDeliveredNotification(notification)
+        if let url = userInfo?["url"] as? String{
             NSWorkspace.shared.open(URL(string: url)!)
         }
-        center.removeDeliveredNotification(notification)
     }
     
     fileprivate func initialSetup() {

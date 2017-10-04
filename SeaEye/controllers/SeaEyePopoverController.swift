@@ -23,6 +23,7 @@ class SeaEyePopoverController: NSViewController {
     var updatesViewController : SeaEyeUpdatesController!
     var model : CircleCIModel!
     var applicationStatus : SeaEyeStatus!
+    var settingsController: SeaEyeWindowSettingsController!
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
     
     override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
@@ -68,6 +69,7 @@ class SeaEyePopoverController: NSViewController {
         settingsViewController = SeaEyeSettingsController(nibName: NSNib.Name(rawValue: "SeaEyeSettingsController"), bundle: nil)
         buildsViewController = SeaEyeBuildsController(nibName: NSNib.Name(rawValue: "SeaEyeBuildsController"), bundle: nil)
         updatesViewController = SeaEyeUpdatesController(nibName: NSNib.Name(rawValue: "SeaEyeUpdatesController"), bundle: nil)
+        settingsController = SeaEyeWindowSettingsController(windowNibName: NSNib.Name("SettingsWindow"))
     }
     
     fileprivate func setupNavButtons() {
@@ -85,7 +87,8 @@ class SeaEyePopoverController: NSViewController {
         shutdownButton.isHidden = true
         openBuildsButton.isHidden = false
         buildsViewController.view.removeFromSuperview()
-        subcontrollerView.addSubview(settingsViewController.view)
+//        subcontrollerView.addSubview(settingsViewController.view)
+        settingsController.showWindow(self)
     }
     
     @IBAction func openBuilds(_ sender: NSButton) {
