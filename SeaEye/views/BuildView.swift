@@ -24,7 +24,7 @@ class BuildView: NSTableCellView {
             statusAndSubject.stringValue = "No tests"
         }
         if build.subject != nil {
-            statusAndSubject.stringValue = statusAndSubject.stringValue + ": \(build.subject!)"
+            statusAndSubject.stringValue += ": \(build.subject!)"
         }
         switch build.status {
             case "success": setColors(greenColor()); break;
@@ -46,7 +46,6 @@ class BuildView: NSTableCellView {
 
         if build.author_name != nil {
             timeAndBuildNumber.stringValue = dateFormatter.string(from: build.start_time) + " | Build #\(build.build_num)" + " | By \(build.author_name!)"
-            
         }
         if isDarkModeEnabled() {
             openURLButton.image = NSImage(named: NSImage.Name(rawValue: "open-alt"))
