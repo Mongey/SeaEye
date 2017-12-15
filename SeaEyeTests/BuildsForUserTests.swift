@@ -34,7 +34,6 @@ class BuildsForUserTests: XCTestCase {
                                           buildNum: 4,
                                           url: URL.init(string: "http://google.com")!,
                                           date: Date())
-
         let buildsByBart = try! NSRegularExpression(pattern: "^Bart", options: NSRegularExpression.Options.caseInsensitive)
         let buildsByHomer = try! NSRegularExpression(pattern: "^Homer", options: NSRegularExpression.Options.caseInsensitive)
         let masterBuilds = try! NSRegularExpression(pattern: "^master", options: NSRegularExpression.Options.caseInsensitive)
@@ -49,6 +48,5 @@ class BuildsForUserTests: XCTestCase {
 
         let masterHomerResult = buildsForUser(builds: [homerBuild, homerDevBuild, bartBuild], userRegex: buildsByHomer, branchRegex: masterBuilds)
         XCTAssertEqual(masterHomerResult.count, 1)
-
     }
 }

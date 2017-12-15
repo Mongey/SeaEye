@@ -5,8 +5,24 @@ enum Result<Value> {
     case failure(Error)
 }
 
+func recentBuilds(completion:((Result<[CircleCIRecentBuild]>) -> Void)?){
+    request(CircleCIGetRequest(path: "recent-builds"), of: [CircleCIRecentBuild].self, completion: completion)
+}
+
 func getProject(name:String, completion: @escaping (Result<[CircleCIBuild]>) -> Void) {
     request(CircleCIGetRequest(path: "project/\(name)"), of: [CircleCIBuild].self, completion: completion)
+}
+
+func getProjects(completion:((Result<[CircleCIProject]>) -> Void)?){
+    request(CircleCIGetRequest(path: "projects"), of: [CircleCIProject].self, completion: completion)
+}
+
+func getMe(completion: (((Result<Me>) -> Void)?)) {
+    request(CircleCIGetRequest(path: "me"), of: Me.self, completion: completion)
+}
+
+struct Me: Decodable {
+    let name : String
 }
 
 func CircleCIurlForPath(path: String) -> URL {
