@@ -11,10 +11,11 @@ import Foundation
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
-
+    
+    @IBOutlet weak var MenuBar: NSMenu! // 🤔 Allows copy pasta
     var statusBarItem : NSStatusItem = NSStatusItem()
     var statusBarIconViewController : SeaEyeIconController!
-    
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         NSUserNotificationCenter.default.delegate = self
         self.initialSetup()

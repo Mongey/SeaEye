@@ -87,8 +87,8 @@ class SeaEyePopoverController: NSViewController {
         shutdownButton.isHidden = true
         openBuildsButton.isHidden = false
         buildsViewController.view.removeFromSuperview()
-        subcontrollerView.addSubview(settingsViewController.view)
-//        settingsController.showWindow(self)
+//        subcontrollerView.addSubview(settingsViewController.view)
+        settingsController.showWindow(self)
     }
     
     @IBAction func openBuilds(_ sender: NSButton) {

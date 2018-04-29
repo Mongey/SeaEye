@@ -71,11 +71,7 @@ class SeaEyeBuildsController: NSViewController, NSTableViewDelegate, NSTableView
     
     //NSTableViewDataSource
     func numberOfRows(in tableView: NSTableView) -> Int {
-        if model != nil  {
-            return model.allBuilds.count
-        } else {
-            return 0
-        }
+        return model != nil ? model.allBuilds.count : 0
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {

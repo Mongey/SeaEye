@@ -8,9 +8,8 @@
 
 import Cocoa
 
-class SeaEyeWindowSettingsController : NSWindowController {
+class SeaEyeWindowSettingsController : NSWindowController,NSWindowDelegate, NSTableViewDelegate,NSTableViewDataSource {
     @IBOutlet weak var apiTokenField: NSTextField!
-    
     @IBOutlet weak var table: NSTableView!
     @IBOutlet weak var branchRegex: NSTextField!
     @IBOutlet weak var userRegex: NSTextField!
@@ -41,7 +40,13 @@ class SeaEyeWindowSettingsController : NSWindowController {
         setField(field: self.apiTokenField, key: "SeaEyeAPIKey")
         setField(field: self.branchRegex, key: "SeaEyeBranches")
         setField(field: self.userRegex, key: "SeaEyeUsers")
+        self.table.allowsColumnSelection = true
+        self.table.allowsColumnReordering = true
+        self.table.delegate = self
+        self.table.dataSource = self
         LoadTableData()
+        self.window?.center()
+        self.window?.makeKeyAndOrderFront(nil)
     }
     
     func setField(field: NSTextField, key: String) {
@@ -64,45 +69,24 @@ class SeaEyeWindowSettingsController : NSWindowController {
             }
         })
     }
-    
-    //    override func windowDidLoad() {
-//        super.windowDidLoad()
-//    }
-}
-
-extension SeaEyeWindowSettingsController: NSTableViewDataSource {
-    
     func numberOfRows(in tableView: NSTableView) -> Int {
-        if self.projects != nil {
-            return self.projects!.count
-        } else {
-            return 0
-        }
+        return self.projects == nil ? 0 : self.projects!.count
     }
-}
-
-extension SeaEyeWindowSettingsController: NSTableViewDelegate {
+    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
+        return self.projects![row]
+    }
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        var text: String = ""
-        var cellIdentifier: String = ""
+        var result: NSTableCellView
+        let column = (tableColumn?.identifier)!
+
+        result  = tableView.makeView(withIdentifier: (tableColumn?.identifier)!, owner: self) as! NSTableCellView
+        var txtValue = "hi"
         
-        print(tableColumn!.title)
-        if tableColumn!.title == "Enable" {
-            cellIdentifier = "EnableCell"
-            text = "enabled?"
-        }
-        if tableColumn!.title == "Name" {
-            cellIdentifier = "NameCell"
-            let project = self.projects![row]
-            text = "\(project.username)/\(project.reponame)"
-        }
-        //
-        //        // 2
-        if let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: cellIdentifier), owner: nil) as? NSTableCellView {
-            cell.textField?.stringValue = text
-            return cell
-        }
-        return nil
+//        if (column == "AutomaticTableColumnIdentifier.0") {
+//            txtValue = self.blackListedProcessNames[row] // bundle identifier
+//        }
+        
+        result.textField?.stringValue = txtValue
+        return result
     }
-    
 }
