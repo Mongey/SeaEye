@@ -11,7 +11,7 @@ import Cocoa
 class SeaEyeIconController: NSViewController {
 
     @IBOutlet var iconButton : NSButton!
-    var model = CircleCIModel()
+    var model = SeaEyeGlobalState()
     var applicationStatus = SeaEyeStatus()
     var hasViewedBuilds = true
     var popover = NSPopover()
@@ -89,11 +89,8 @@ class SeaEyeIconController: NSViewController {
     
     func setRedBuildIcon(notification: Notification) -> Void{
         hasViewedBuilds = false
-        if (self.isDarkModeEnabled()) {
-            iconButton.image = NSImage(named: NSImage.Name(rawValue: "circleci-failed-alt"))
-        } else {
-            iconButton.image = NSImage(named: NSImage.Name(rawValue: "circleci-failed"))
-        }
+        let imageFile = self.isDarkModeEnabled() ? "circleci-failed-alt" : "circleci-faileds"
+        iconButton.image = NSImage(named: NSImage.Name(rawValue: imageFile))
         
         if UserDefaults.standard.bool(forKey: "SeaEyeNotify") {
             let build = notification.userInfo!["build"] as! CircleCIBuild
@@ -178,9 +175,9 @@ class SeaEyeIconController: NSViewController {
     
     @IBAction func openPopover(_ sender: NSButton) {
         self.setupMenuBarIcon()
-        let popoverController = SeaEyePopoverController(nibName: NSNib.Name(rawValue: "SeaEyePopoverController"), bundle: nil) as SeaEyePopoverController!
+        let popoverController = SeaEyePopoverController(nibName: NSNib.Name(rawValue: "SeaEyePopoverController"), bundle: nil) as SeaEyePopoverController?
         popoverController?.model = self.model
-        popoverController?.applicationStatus = self.applicationStatus   
+        popoverController?.applicationStatus = self.applicationStatus
         
         if !popover.isShown {
             popover.contentViewController = popoverController

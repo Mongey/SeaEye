@@ -10,7 +10,7 @@ import Cocoa
 
 class SeaEyeBuildsController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
 
-    var model : CircleCIModel!
+    var model : SeaEyeGlobalState!
     
     @IBOutlet weak var fallbackView: NSTextField!
     @IBOutlet weak var buildsTable: NSTableView!

@@ -61,7 +61,7 @@ class SeaEyeStatus: NSObject {
     
     func currentVersion() -> String {
         var version = "0.0"
-        if let info = Bundle.main.infoDictionary as NSDictionary! {
+        if let info = Bundle.main.infoDictionary as NSDictionary? {
             if let currentVersionString = info.object(forKey: "CFBundleShortVersionString") as? String {
                 version =  currentVersionString
             }

@@ -8,27 +8,38 @@
 
 import Cocoa
 
-class CircleCIModel: NSObject {
+class SeaEyeGlobalState: NSObject {
     var hasValidUserSettings = false
+    var allProjects: [Project]
+    var allBuilds: [CircleCIBuild]
+    var lastNotificationDate: Date!
+    var updatesTimer: Timer!
+    var settings: SeaEyeSettings
     
     override init() {
         self.allBuilds = []
         self.allProjects = []
-
+        self.settings = SeaEyeSettings.init()
+        
         super.init()
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(CircleCIModel.validateUserSettingsAndStartRequests),
+            selector: #selector(SeaEyeGlobalState.validateUserSettingsAndStartRequests),
             name: NSNotification.Name(rawValue: "SeaEyeSettingsChanged"),
             object: nil
         )
         self.validateUserSettingsAndStartRequests()
     }
     
-    var allProjects: [Project]
-    var allBuilds: [CircleCIBuild]
-    var lastNotificationDate: Date!
-    var updatesTimer: Timer!
+    @objc func validateUserSettingsAndStartRequests() {
+        if (self.settings.valid()) {
+            allBuilds = []
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "SeaEyeUpdatedBuilds"), object: nil)
+            resetAPIRequests()
+        } else {
+//            stopAPIRequests()
+        }
+    }
     
     func runModelUpdates() {
         objc_sync_enter(self)
@@ -40,7 +51,7 @@ class CircleCIModel: NSObject {
         updatesTimer = Timer.scheduledTimer(
             timeInterval: TimeInterval(3),
             target: self,
-            selector: #selector(CircleCIModel.updateBuilds),
+            selector: #selector(SeaEyeGlobalState.updateBuilds),
             userInfo: nil,
             repeats: false
         )
@@ -50,11 +61,7 @@ class CircleCIModel: NSObject {
     @objc func updateBuilds() {
         autoreleasepool {
             print("Update builds!")
-            var builds: [CircleCIBuild] = []
-            for (project) in (self.allProjects) {
-                builds += project.projectBuilds
-            }
-            self.allBuilds = builds.sorted {$0.start_time.timeIntervalSince1970 > $1.start_time.timeIntervalSince1970}
+            self.allBuilds = self.allBuilds.sorted {$0.start_time.timeIntervalSince1970 > $1.start_time.timeIntervalSince1970}
             self.calculateBuildStatus()
         }
     }
@@ -90,20 +97,7 @@ class CircleCIModel: NSObject {
         NotificationCenter.default.post(name: Notification.Name(rawValue: "SeaEyeUpdatedBuilds"), object: nil)
         lastNotificationDate = Date()
     }
-    
-    @objc func validateUserSettingsAndStartRequests() {
-        let validation = self.validateKey("SeaEyeAPIKey")
-            && self.validateKey("SeaEyeOrganization")
-            && self.validateKey("SeaEyeProjects")
-        
-        if (validation) {
-            allBuilds = []
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "SeaEyeUpdatedBuilds"), object: nil)
-            resetAPIRequests()
-        } else {
-            stopAPIRequests()
-        }
-    }
+
     
     fileprivate func validateKey(_ key : String) -> Bool {
         let userDefaults = UserDefaults.standard
@@ -111,43 +105,21 @@ class CircleCIModel: NSObject {
     }
     
     fileprivate func resetAPIRequests() {
-
-        self.stopAPIRequests()
-        
         allProjects = []
-        let userDefaults = UserDefaults.standard
-        let apiKey = userDefaults.string(forKey: "SeaEyeAPIKey") as String!
-        let organization = userDefaults.string(forKey: "SeaEyeOrganization") as String!
-        let projectsString = userDefaults.string(forKey: "SeaEyeProjects") as String!
-        let projectsArray = projectsString?.components(separatedBy: CharacterSet.whitespaces)
+        let client = CircleCIClient.init(apiToken: settings.apiKey!)
         
- 
-        allProjects = ProjectsFromSettings(APIKey: apiKey!, Organisation: organization!, ProjectNames: projectsArray!)
-        self.startAPIRequests()
-    }
-    
-    func ProjectsFromSettings(APIKey: String, Organisation: String, ProjectNames: [String] ) -> [Project] {
-        var projects = [Project]()
-        for projectName in ProjectNames {
-            let project = Project(name: projectName, organization: Organisation, key:APIKey, parentModel: self)
-            projects.append(project)
-        }
-        return projects
-    }
-    
-    fileprivate func startAPIRequests() {
-        for (project) in (allProjects) {
-            project.reset()
-        }
-    }
-    
-    fileprivate func stopAPIRequests() {
-        if updatesTimer != nil {
-            updatesTimer.invalidate()
-            updatesTimer = nil
-        }
-        for(project) in (allProjects) {
-            project.stop();
+        for project in settings.followedProjects {
+            client.getProject(project: project) { (r) in
+               switch r {
+                case .success(let builds):
+                    print(builds)
+                    self.allBuilds.append(contentsOf: builds)
+                    break
+                case .failure(let error):
+                    print(error)
+                    break
+                }
+            }
         }
     }
 }

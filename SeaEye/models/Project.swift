@@ -12,11 +12,11 @@ class Project: NSObject {
     var projectName: String
     var organizationName: String
     var apiKey: String!
-    var parent: CircleCIModel!
+    var parent: SeaEyeGlobalState!
     var timer: Timer!
     var projectBuilds : Array<CircleCIBuild>
     
-    init(name: String, organization: String, key: String, parentModel: CircleCIModel!) {
+    init(name: String, organization: String, key: String, parentModel: SeaEyeGlobalState!) {
         projectBuilds = []
         projectName = name
         apiKey = key
@@ -47,37 +47,43 @@ class Project: NSObject {
     }
     
     @objc func getBuildData(_: Any? = nil) -> Void {
-        getProject(name: "github/\(organizationName)/\(projectName)", completion: { (r: Result<[CircleCIBuild]>) -> Void in
-                switch r {
-                case .success(let builds):
-                   
-                    do {
-                        let branchString = UserDefaults.standard.string(forKey: "SeaEyeBranches")
-                        let userString = UserDefaults.standard.string(forKey: "SeaEyeUsers")
-                        var branchRegex: NSRegularExpression?
-                        var userRegex: NSRegularExpression?
-                        
-                        if userString != nil {
-                            print("Using regex \(userString!) for user")
-                            userRegex = try NSRegularExpression(pattern: userString!, options: NSRegularExpression.Options.caseInsensitive)
-                        }
-                        
-                        if branchString != nil {
-                            branchRegex = try NSRegularExpression(pattern: branchString!, options: NSRegularExpression.Options.caseInsensitive)
-                        }
-                        
-                        self.projectBuilds = buildsForUser(builds: builds, userRegex: userRegex, branchRegex: branchRegex)
-                    } catch {
-                         self.projectBuilds = builds
-                    }
-                    self.parent.runModelUpdates()
-                    break
-                    
-                case .failure(let error):
-                    print("error: \(error.localizedDescription) \(self.organizationName) \(self.projectName)")
-//                    self.notifyError(error.localizedDescription)
-                }
-        })
+//        var token = ""
+//        if let apiKey = UserDefaults.standard.string(forKey: "SeaEyeAPIKey") {
+//            token = apiKey
+//        }
+//        let client = CircleCIClient.init(apiToken: token)
+//        client.getProject(project: , completion: { (r: Result<[CircleCIBuild]>) -> Void in
+//                switch r {
+//                case .success(let builds):
+//
+//                    do {
+//                        let branchString = UserDefaults.standard.string(forKey: "SeaEyeBranches")
+//                        let userString = UserDefaults.standard.string(forKey: "SeaEyeUsers")
+//                        var branchRegex: NSRegularExpression?
+//                        var userRegex: NSRegularExpression?
+//
+//                        if userString != nil {
+//                            print("Using regex \(userString!) for user")
+//                            userRegex = try NSRegularExpression(pattern: userString!, options: NSRegularExpression.Options.caseInsensitive)
+//                        }
+//
+//                        if branchString != nil {
+//                            print("Using regex \(branchString!) for branch")
+//                            branchRegex = try NSRegularExpression(pattern: branchString!, options: NSRegularExpression.Options.caseInsensitive)
+//                        }
+//
+//                        self.projectBuilds = buildsForUser(builds: builds, userRegex: userRegex, branchRegex: branchRegex)
+//                    } catch {
+//                         self.projectBuilds = builds
+//                    }
+//                    self.parent.runModelUpdates()
+//                    break
+//
+//                case .failure(let error):
+//                    print("error: \(error.localizedDescription) \(self.organizationName) \(self.projectName)")
+////                    self.notifyError(error.localizedDescription)
+//                }
+//        })
     }
  
     private func notifyError(_ error: String) {
