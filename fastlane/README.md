@@ -21,6 +21,11 @@ or alternatively using `brew cask install fastlane`
 fastlane mac test
 ```
 Runs all the tests
+### mac release
+```
+fastlane mac release
+```
+
 
 ----
 

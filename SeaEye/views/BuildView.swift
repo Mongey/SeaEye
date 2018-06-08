@@ -38,7 +38,7 @@ class BuildView: NSTableCellView {
             timeAndBuildNumber.stringValue = dateFormatter.string(from: build.start_time) + " | Build #\(build.build_num)" + " | By \(build.author_name!)"
         }
         if isDarkModeEnabled() {
-            openURLButton.image = NSImage(named: NSImage.Name(rawValue: "open-alt"))
+            openURLButton.image = NSImage(named: NSImage.Name("open-alt"))
         }
     }
     

@@ -1,6 +1,5 @@
 import Foundation
 
-
 class CircleCIClient {
     var apiToken: String
     var baseURL: String
@@ -28,8 +27,8 @@ class CircleCIClient {
     private func get(path: String) -> URLRequest {
         var request = URLRequest(url: urlFor(path: path))
         request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "accept")
-        request.addValue("application/json", forHTTPHeaderField: "content-type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         return request
     }
     

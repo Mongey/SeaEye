@@ -8,6 +8,6 @@ platform :mac do
     scan(output_types: "junit")
   end
   lane :release do
-  increment_build_number(xcodeproj: project_file) # version bump
+    increment_build_number(xcodeproj: 'SeaEye.xcodeproj') # version bump
   end
 end
