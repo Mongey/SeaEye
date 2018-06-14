@@ -24,8 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     }
     
     func setupApplicationMenuViewController() {
-        let nib = NSNib.Name("SeaEyeIconController")
-        self.statusBarIconViewController = SeaEyeIconController(nibName: nib, bundle: nil)
+        self.statusBarIconViewController = SeaEyeIconController(nibName: NSNib.Name("SeaEyeIconController"), bundle: nil)
         statusBarItem.view = statusBarIconViewController?.view
     }
     

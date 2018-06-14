@@ -20,26 +20,28 @@
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Ak-XS-B76">
-                    <rect key="frame" x="20" y="318" width="260" height="29"/>
+                    <rect key="frame" x="-2" y="318" width="304" height="29"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Version 0.3 Available" drawsBackground="YES" id="8xa-ms-Toc">
-                        <font key="font" size="24" name="HelveticaNeue-Thin"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Version 0.3 Available" id="8xa-ms-Toc">
+                        <font key="font" metaFont="system" size="22"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Od-dJ-QOu">
                     <rect key="frame" x="20" y="281" width="260" height="29"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Changes" drawsBackground="YES" id="Vh7-9K-uys">
-                        <font key="font" size="16" name="HelveticaNeue-Thin"/>
+                        <font key="font" metaFont="system" size="16"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                     </textFieldCell>
                 </textField>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LbC-5P-mhf">
-                    <rect key="frame" x="18" y="17" width="256" height="44"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="LbC-5P-mhf">
+                    <rect key="frame" x="18" y="17" width="264" height="49"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="wu9-TW-Glo"/>
+                    </constraints>
                     <buttonCell key="cell" type="bevel" title="Get it on GitHub" bezelStyle="regularSquare" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="6pV-oi-vJ3">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system" size="16"/>
@@ -58,6 +60,11 @@
                     </textFieldCell>
                 </textField>
             </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="LbC-5P-mhf" secondAttribute="trailing" constant="20" id="83f-Fm-RLa"/>
+                <constraint firstAttribute="bottom" secondItem="LbC-5P-mhf" secondAttribute="bottom" constant="20" id="9vc-Yw-fEu"/>
+                <constraint firstItem="LbC-5P-mhf" firstAttribute="leading" secondItem="1B9-tT-DqL" secondAttribute="leading" constant="20" id="bTr-gR-SXG"/>
+            </constraints>
         </view>
     </objects>
 </document>

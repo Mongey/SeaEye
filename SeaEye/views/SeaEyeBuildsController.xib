@@ -16,11 +16,11 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <view id="ao6-vM-FfD">
-            <rect key="frame" x="0.0" y="0.0" width="300" height="360"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="377"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <textField identifier="FallbackView" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qNO-Q7-XFU">
-                    <rect key="frame" x="0.0" y="174" width="300" height="17"/>
+                    <rect key="frame" x="0.0" y="191" width="300" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="You have not set an API key" drawsBackground="YES" id="maM-NH-Hbj">
                         <font key="font" metaFont="smallSystem"/>
@@ -28,22 +28,21 @@
                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                     </textFieldCell>
                 </textField>
-                <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="95" horizontalPageScroll="10" verticalLineScroll="95" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xjt-ge-yyE">
+                <scrollView borderType="none" horizontalLineScroll="95" horizontalPageScroll="10" verticalLineScroll="95" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xjt-ge-yyE">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="377"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="PK3-vg-WuS">
+                    <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="PK3-vg-WuS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="377"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView identifier="BuildsTable" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" selectionHighlightStyle="none" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="80" headerView="mRj-sp-O1W" viewBased="YES" id="jtp-5m-WQN">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="360"/>
+                            <tableView identifier="BuildsTable" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" selectionHighlightStyle="none" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="80" viewBased="YES" floatsGroupRows="NO" id="jtp-5m-WQN">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="377"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="0.0" height="15"/>
-                                <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
+                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <tableViewGridLines key="gridStyleMask" dashed="YES"/>
-                                <color key="gridColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn width="320" minWidth="40" maxWidth="1000" id="8Su-Pr-53O">
+                                    <tableColumn editable="NO" width="320" minWidth="40" maxWidth="1000" id="8Su-Pr-53O">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -52,7 +51,7 @@
                                         <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="vSa-DU-wKq">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
@@ -126,23 +125,25 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
+                        <nil key="backgroundColor"/>
                     </clipView>
                     <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="vHY-PJ-yBb">
                         <rect key="frame" x="1" y="119" width="223" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="2qf-Hs-0P1">
-                        <rect key="frame" x="304" y="17" width="16" height="360"/>
+                    <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="2qf-Hs-0P1">
+                        <rect key="frame" x="304" y="0.0" width="16" height="377"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <tableHeaderView key="headerView" hidden="YES" id="mRj-sp-O1W">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="17"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </tableHeaderView>
                 </scrollView>
             </subviews>
-            <point key="canvasLocation" x="433" y="253"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="Xjt-ge-yyE" secondAttribute="bottom" id="0iu-Nn-OVh"/>
+                <constraint firstItem="Xjt-ge-yyE" firstAttribute="top" secondItem="ao6-vM-FfD" secondAttribute="top" id="CCH-wR-eTb"/>
+                <constraint firstItem="Xjt-ge-yyE" firstAttribute="leading" secondItem="ao6-vM-FfD" secondAttribute="leading" id="U1D-VW-xFP"/>
+                <constraint firstAttribute="trailing" secondItem="Xjt-ge-yyE" secondAttribute="trailing" id="vqm-Jv-Jlf"/>
+            </constraints>
+            <point key="canvasLocation" x="443" y="261.5"/>
         </view>
     </objects>
     <resources>

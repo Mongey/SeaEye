@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -62,10 +62,19 @@
 		F46F58B52096347600DD6E92 /* ViewHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46F58B32096347600DD6E92 /* ViewHelpers.swift */; };
 		F46F58B7209644CE00DD6E92 /* BuildStatusUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46F58B6209644CE00DD6E92 /* BuildStatusUpdate.swift */; };
 		F46F58B8209644CE00DD6E92 /* BuildStatusUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46F58B6209644CE00DD6E92 /* BuildStatusUpdate.swift */; };
+		F4A5EB3820CA23EE0002621D /* SeaEyeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A5EB3720CA23EE0002621D /* SeaEyeUITests.swift */; };
+		F4A5EB3F20CA23F30002621D /* ConorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F402489C20CA200F00E8B028 /* ConorTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		60C73BEC19FC025A0067CDCA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 60C73BD119FC025A0067CDCA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 60C73BD819FC025A0067CDCA;
+			remoteInfo = SeaEye;
+		};
+		F4A5EB3A20CA23EE0002621D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 60C73BD119FC025A0067CDCA /* Project object */;
 			proxyType = 1;
@@ -109,6 +118,7 @@
 		60C73C1319FD7ECB0067CDCA /* SeaEyeBuildsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeaEyeBuildsController.swift; sourceTree = "<group>"; };
 		60C73C1719FD7EE10067CDCA /* SeaEyeSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeaEyeSettingsController.swift; sourceTree = "<group>"; };
 		60F0232B1A1A95930067C0A0 /* SeaEyeUpdatesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeaEyeUpdatesController.swift; sourceTree = "<group>"; };
+		F402489C20CA200F00E8B028 /* ConorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConorTest.swift; sourceTree = "<group>"; };
 		F46F589C20961A9A00DD6E92 /* SeaEyeSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeaEyeSettings.swift; sourceTree = "<group>"; };
 		F46F589E209628E100DD6E92 /* HTTPRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPRequest.swift; sourceTree = "<group>"; };
 		F46F58A020962A4700DD6E92 /* CircleCIUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCIUser.swift; sourceTree = "<group>"; };
@@ -117,6 +127,9 @@
 		F46F58B0209632EC00DD6E92 /* BuildStatusColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildStatusColor.swift; sourceTree = "<group>"; };
 		F46F58B32096347600DD6E92 /* ViewHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHelpers.swift; sourceTree = "<group>"; };
 		F46F58B6209644CE00DD6E92 /* BuildStatusUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildStatusUpdate.swift; sourceTree = "<group>"; };
+		F4A5EB3520CA23EE0002621D /* SeaEyeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SeaEyeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4A5EB3720CA23EE0002621D /* SeaEyeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeaEyeUITests.swift; sourceTree = "<group>"; };
+		F4A5EB3920CA23EE0002621D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +141,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		60C73BE819FC025A0067CDCA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4A5EB3220CA23EE0002621D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -198,6 +218,7 @@
 			children = (
 				60C73BDB19FC025A0067CDCA /* SeaEye */,
 				60C73BEE19FC025A0067CDCA /* SeaEyeTests */,
+				F4A5EB3620CA23EE0002621D /* SeaEyeUITests */,
 				60C73BDA19FC025A0067CDCA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -207,6 +228,7 @@
 			children = (
 				60C73BD919FC025A0067CDCA /* SeaEye.app */,
 				60C73BEB19FC025A0067CDCA /* SeaEyeTests.xctest */,
+				F4A5EB3520CA23EE0002621D /* SeaEyeUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -305,6 +327,16 @@
 			path = http;
 			sourceTree = "<group>";
 		};
+		F4A5EB3620CA23EE0002621D /* SeaEyeUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F402489C20CA200F00E8B028 /* ConorTest.swift */,
+				F4A5EB3720CA23EE0002621D /* SeaEyeUITests.swift */,
+				F4A5EB3920CA23EE0002621D /* Info.plist */,
+			);
+			path = SeaEyeUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -343,12 +375,31 @@
 			productReference = 60C73BEB19FC025A0067CDCA /* SeaEyeTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		F4A5EB3420CA23EE0002621D /* SeaEyeUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4A5EB3C20CA23EE0002621D /* Build configuration list for PBXNativeTarget "SeaEyeUITests" */;
+			buildPhases = (
+				F4A5EB3120CA23EE0002621D /* Sources */,
+				F4A5EB3220CA23EE0002621D /* Frameworks */,
+				F4A5EB3320CA23EE0002621D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F4A5EB3B20CA23EE0002621D /* PBXTargetDependency */,
+			);
+			name = SeaEyeUITests;
+			productName = SeaEyeUITests;
+			productReference = F4A5EB3520CA23EE0002621D /* SeaEyeUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		60C73BD119FC025A0067CDCA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1000;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = Nolaneo;
 				TargetAttributes = {
@@ -361,10 +412,14 @@
 						LastSwiftMigration = 1000;
 						TestTargetID = 60C73BD819FC025A0067CDCA;
 					};
+					F4A5EB3420CA23EE0002621D = {
+						CreatedOnToolsVersion = 10.0;
+						TestTargetID = 60C73BD819FC025A0067CDCA;
+					};
 				};
 			};
 			buildConfigurationList = 60C73BD419FC025A0067CDCA /* Build configuration list for PBXProject "SeaEye" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -378,6 +433,7 @@
 			targets = (
 				60C73BD819FC025A0067CDCA /* SeaEye */,
 				60C73BEA19FC025A0067CDCA /* SeaEyeTests */,
+				F4A5EB3420CA23EE0002621D /* SeaEyeUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -404,6 +460,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				53A3BE8D1FD34D85006961C6 /* circleci2-project.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4A5EB3320CA23EE0002621D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,6 +532,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F4A5EB3120CA23EE0002621D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4A5EB3820CA23EE0002621D /* SeaEyeUITests.swift in Sources */,
+				F4A5EB3F20CA23F30002621D /* ConorTest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -476,6 +548,11 @@
 			isa = PBXTargetDependency;
 			target = 60C73BD819FC025A0067CDCA /* SeaEye */;
 			targetProxy = 60C73BEC19FC025A0067CDCA /* PBXContainerItemProxy */;
+		};
+		F4A5EB3B20CA23EE0002621D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 60C73BD819FC025A0067CDCA /* SeaEye */;
+			targetProxy = F4A5EB3A20CA23EE0002621D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -530,6 +607,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = singlefile;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 			};
@@ -578,7 +656,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
@@ -659,6 +738,56 @@
 			};
 			name = Release;
 		};
+		F4A5EB3D20CA23EE0002621D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = SeaEyeUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				PRODUCT_BUNDLE_IDENTIFIER = io.nolaneo.SeaEyeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 4.2;
+				TEST_TARGET_NAME = SeaEye;
+			};
+			name = Debug;
+		};
+		F4A5EB3E20CA23EE0002621D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = SeaEyeUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = io.nolaneo.SeaEyeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TEST_TARGET_NAME = SeaEye;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -685,6 +814,15 @@
 			buildConfigurations = (
 				60C73BF919FC025A0067CDCA /* Debug */,
 				60C73BFA19FC025A0067CDCA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F4A5EB3C20CA23EE0002621D /* Build configuration list for PBXNativeTarget "SeaEyeUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4A5EB3D20CA23EE0002621D /* Debug */,
+				F4A5EB3E20CA23EE0002621D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

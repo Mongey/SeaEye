@@ -33,7 +33,7 @@
         </view>
     </objects>
     <resources>
-        <image name="circleci-normal" width="15" height="15"/>
+        <image name="circleci-normal" width="30" height="30"/>
         <image name="circleci-normal-alt" width="15" height="15"/>
     </resources>
 </document>
