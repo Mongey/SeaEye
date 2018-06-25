@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.12" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.12"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SeaEyeIconController" customModule="SeaEye">
@@ -13,13 +14,13 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <view autoresizesSubviews="NO" id="zyr-N0-mXZ">
-            <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
+        <view id="zyr-N0-mXZ">
+            <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <button identifier="IconButton" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Jt-GG-4o5">
-                    <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="circleci-normal" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="k9m-Cj-9cd">
+                <button identifier="IconButton" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Jt-GG-4o5">
+                    <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="circleci" imagePosition="overlaps" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="k9m-Cj-9cd">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -28,9 +29,15 @@
                     </connections>
                 </button>
             </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="3Jt-GG-4o5" secondAttribute="bottom" id="Cnh-aH-Lzg"/>
+                <constraint firstItem="3Jt-GG-4o5" firstAttribute="leading" secondItem="zyr-N0-mXZ" secondAttribute="leading" id="Dom-f8-Ft5"/>
+                <constraint firstAttribute="trailing" secondItem="3Jt-GG-4o5" secondAttribute="trailing" id="awR-wl-Y4O"/>
+                <constraint firstItem="3Jt-GG-4o5" firstAttribute="top" secondItem="zyr-N0-mXZ" secondAttribute="top" id="eqJ-oM-TcW"/>
+            </constraints>
         </view>
     </objects>
     <resources>
-        <image name="circleci-normal" width="15" height="15"/>
+        <image name="circleci" width="30" height="30"/>
     </resources>
 </document>
