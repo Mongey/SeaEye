@@ -31,8 +31,7 @@ struct Release: Decodable {
     }
 }
 
-
-public class GithubClient {
+class GithubClient {
     static func latestRelease(completion: ((Result<Release>) -> Void)?) {
         request(get(path: "releases/latest"), of: Release.self, completion: completion)
     }

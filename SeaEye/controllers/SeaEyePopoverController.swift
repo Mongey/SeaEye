@@ -9,21 +9,17 @@
 import Cocoa
 
 class SeaEyePopoverController: NSViewController {
-
-    var clickEventMonitor: AnyObject!
     @IBOutlet weak var subcontrollerView: NSView!
     @IBOutlet weak var openSettingsButton: NSButton!
     @IBOutlet weak var openBuildsButton: NSButton!
     @IBOutlet weak var openUpdatesButton: NSButton!
     @IBOutlet weak var shutdownButton: NSButton!
-    @IBOutlet weak var opacityFixView: NSImageView!
 
     var settingsViewController: SeaEyeSettingsController!
     var buildsViewController: SeaEyeBuildsController!
     var updatesViewController: SeaEyeUpdatesController!
     var model: CircleCIModel!
     var applicationStatus: SeaEyeStatus!
-    var appDelegate: NSApplicationDelegate? = NSApplication.shared.delegate
 
     override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -39,51 +35,27 @@ class SeaEyePopoverController: NSViewController {
     }
 
     func setup() {
-        setupNavButtons()
         setupViewControllers()
         showUpdateButtonIfAppropriate()
     }
 
     fileprivate func setupViewControllers() {
-        let imageFile = isDarkModeEnabled()  ? "opacity-fix-dark" : "opacity-fix-light"
-        opacityFixView.image = NSImage(named: NSImage.Name(rawValue: imageFile))
-
         setupNibControllers()
 
-        settingsViewController.parentController = self
         buildsViewController.model = model
         updatesViewController.applicationStatus = self.applicationStatus
         openBuildsButton.isHidden = true
         subcontrollerView.addSubview(buildsViewController.view)
     }
 
-    fileprivate func setupStoryboardControllers() {
-        let storyboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil)
-        if let sVC = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "SeaEyeSettingsController")) as? SeaEyeSettingsController {
-            settingsViewController = sVC
-        }
-
-        if let bVC = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "SeaEyeBuildsController")) as? SeaEyeBuildsController {
-            buildsViewController = bVC
-        }
-        if let uVC = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "SeaEyeUpdatesController")) as? SeaEyeUpdatesController {
-            updatesViewController = uVC
-        }
-    }
-
     fileprivate func setupNibControllers() {
-        settingsViewController = SeaEyeSettingsController(nibName: NSNib.Name(rawValue: "SeaEyeSettingsController"), bundle: nil)
-        buildsViewController = SeaEyeBuildsController(nibName: NSNib.Name(rawValue: "SeaEyeBuildsController"), bundle: nil)
-        updatesViewController = SeaEyeUpdatesController(nibName: NSNib.Name(rawValue: "SeaEyeUpdatesController"), bundle: nil)
-    }
-
-    fileprivate func setupNavButtons() {
-        //Templated images cause background overlay weirdness
-        let imageSuffix = isDarkModeEnabled() ? "" : "-alt"
-
-        openSettingsButton.image = NSImage(named: NSImage.Name(rawValue: "settings\(imageSuffix)"))
-        openBuildsButton.image = NSImage(named: NSImage.Name(rawValue: "back\(imageSuffix)"))
-        shutdownButton.image = NSImage(named: NSImage.Name(rawValue: "power\(imageSuffix)"))
+        settingsViewController = SeaEyeSettingsController(nibName: NSNib.Name(rawValue: "SeaEyeSettingsController"),
+                                                          bundle: nil,
+                                                          parentController: self)
+        buildsViewController = SeaEyeBuildsController(nibName: NSNib.Name(rawValue: "SeaEyeBuildsController"),
+                                                      bundle: nil)
+        updatesViewController = SeaEyeUpdatesController(nibName: NSNib.Name(rawValue: "SeaEyeUpdatesController"),
+                                                        bundle: nil)
     }
 
     @IBAction func openSettings(_ sender: NSButton) {
@@ -119,29 +91,22 @@ class SeaEyePopoverController: NSViewController {
     }
 
     fileprivate func showUpdateButtonIfAppropriate() {
-        if applicationStatus.hasUpdate {
-            let versionString = NSMutableAttributedString(string: applicationStatus.version!.latestVersion)
-            let range = NSRange(location: 0, length: applicationStatus.version!.latestVersion.count)
-            versionString.addAttribute(
-                NSAttributedStringKey.foregroundColor,
-                value: NSColor.red,
-                range: range
-            )
-            versionString.fixAttributes(in: range)
-            openUpdatesButton.attributedTitle = versionString
-            openUpdatesButton.isHidden = false
-
-        } else {
-            openUpdatesButton.isHidden = true
+        if applicationStatus != nil {
+            if applicationStatus.hasUpdate {
+                let versionString = NSMutableAttributedString(string: applicationStatus.version!.latestVersion)
+                let range = NSRange(location: 0, length: applicationStatus.version!.latestVersion.count)
+                versionString.addAttribute(
+                    NSAttributedStringKey.foregroundColor,
+                    value: NSColor.red,
+                    range: range
+                )
+                versionString.fixAttributes(in: range)
+                openUpdatesButton.attributedTitle = versionString
+                openUpdatesButton.isHidden = false
+            }
+            return
         }
-    }
 
-    fileprivate func isDarkModeEnabled() -> Bool {
-        let dictionary  = UserDefaults.standard.persistentDomain(forName: UserDefaults.globalDomain)
-        if let interfaceStyle = dictionary?["AppleInterfaceStyle"] as? NSString {
-            return interfaceStyle.localizedCaseInsensitiveContains("dark")
-        } else {
-            return false
-        }
+        openUpdatesButton.isHidden = true
     }
 }

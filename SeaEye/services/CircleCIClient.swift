@@ -1,55 +1,44 @@
 import Foundation
 
-enum Result<Value> {
-    case success(Value)
-    case failure(Error)
-}
-
-func getProject(name: String, completion: @escaping (Result<[CircleCIBuild]>) -> Void) {
-    request(circleCIGetRequest(path: "project/\(name)"), of: [CircleCIBuild].self, completion: completion)
-}
-
-func circleCIGetRequest(path: String) -> URLRequest {
-    var request = URLRequest(url: circleCIurlForPath(path: path))
-    request.httpMethod = "GET"
-    request.addValue("application/json", forHTTPHeaderField: "accept")
-    request.addValue("application/json", forHTTPHeaderField: "content-type")
-    return request
-}
-
-func circleCIurlForPath(path: String) -> URL {
-    var token = ""
-    if let apiKey = UserDefaults.standard.string(forKey: "SeaEyeAPIKey") {
-        token = apiKey
+struct CircleCIProject: Decodable {
+    let username: String
+    let reponame: String
+    let vcsUrl: String
+    let following: Bool
+    func description() -> String {
+        return "\(username)/\(reponame)"
     }
-    return URL(string: "https://circleci.com/api/v1.1/\(path)?circle-token=\(token)")!
 }
 
-func request <T: Decodable>(_ request: URLRequest, of: T.Type, completion: ((Result<T>) -> Void)?) {
-    let session = URLSession(configuration: URLSessionConfiguration.default)
+struct Me: Decodable {
+    let name: String
+}
 
-    let task = session.dataTask(with: request) { (responseData, response, responseError) in  DispatchQueue.main.async {
-            guard responseError == nil else {
-                completion!(.failure(responseError!))
-                return
-            }
+public class CircleCIClient {
+    var baseURL: String = "https://circleci.com"
+    var token: String = ""
 
-            guard let jsonData = responseData else {
-                let userInfo = [NSLocalizedDescriptionKey: "Data was not retrieved from request"]
-                let error = NSError(domain: "",
-                                    code: 0,
-                                    userInfo: userInfo) as Error
-                completion!(.failure(error))
-                return
-            }
-
-            do {
-                let builds = try CircleCIDecoder().decode(T.self, from: jsonData)
-                completion!(.success(builds))
-            } catch {
-                completion!(.failure(error))
-            }
-        }
+    func getProjects(completion: ((Result<[CircleCIProject]>) -> Void)?) {
+        request(get(path: "projects"), of: [CircleCIProject].self, completion: completion)
     }
-    task.resume()
+
+    func getProject(name: String, completion: ((Result<[CircleCIBuild]>) -> Void)?) {
+        request(get(path: "project/\(name)"), of: [CircleCIBuild].self, completion: completion)
+    }
+
+    func getMe(completion: (((Result<Me>) -> Void)?)) {
+        request(get(path: "me"), of: Me.self, completion: completion)
+    }
+
+    private func get(path: String) -> URLRequest {
+        var request = URLRequest(url: url(path: path))
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "content-type")
+        return request
+    }
+
+    private func url(path: String) -> URL {
+        return URL(string: "\(baseURL)/api/v1.1/\(path)?circle-token=\(self.token)")!
+    }
 }

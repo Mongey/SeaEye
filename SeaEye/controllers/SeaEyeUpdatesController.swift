@@ -32,9 +32,9 @@ class SeaEyeUpdatesController: NSViewController {
             return
         }
 
-        if applicationStatus.version != nil {
-            changes.stringValue = applicationStatus.version!.changes
-            versionLabel.stringValue = "Version \(applicationStatus.version!.latestVersion) Available"
+        if let version = applicationStatus.version {
+            changes.stringValue = version.changes
+            versionLabel.stringValue = "Version \(version.latestVersion) Available"
         }
     }
 
@@ -42,8 +42,8 @@ class SeaEyeUpdatesController: NSViewController {
         if applicationStatus == nil {
             return
         }
-        if applicationStatus.version != nil {
-            NSWorkspace.shared.open(applicationStatus.version!.downloadUrl)
+        if let version = applicationStatus.version {
+            NSWorkspace.shared.open(version.downloadUrl)
         }
     }
 }

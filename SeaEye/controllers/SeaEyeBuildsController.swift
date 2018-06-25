@@ -9,7 +9,6 @@
 import Cocoa
 
 class SeaEyeBuildsController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
-
     var model: CircleCIModel!
 
     @IBOutlet weak var fallbackView: NSTextField!
@@ -28,7 +27,7 @@ class SeaEyeBuildsController: NSViewController, NSTableViewDelegate, NSTableView
     }
 
     override func viewWillAppear() {
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "SeaEyeUpdatedBuilds"),
+        NotificationCenter.default.addObserver(forName: SeaEyeNotifications.updatedBuilds.notification,
                                                object: nil,
                                                queue: OperationQueue.main,
                                                using: reloadBuilds)
@@ -48,9 +47,8 @@ class SeaEyeBuildsController: NSViewController, NSTableViewDelegate, NSTableView
         buildsTable.reloadData()
     }
 
-    fileprivate func setupFallBackViews() {
-        fallbackView.isHidden = false
-        buildsTable.isHidden = true
+    private func setupFallBackViews() {
+        showFallbackView()
         let userDefaults = UserDefaults.standard
         if userDefaults.string(forKey: "SeaEyeAPIKey") == nil {
             return fallbackView.stringValue = "You have not set an API key"
@@ -65,17 +63,22 @@ class SeaEyeBuildsController: NSViewController, NSTableViewDelegate, NSTableView
         if model.allBuilds.count == 0 {
             return fallbackView.stringValue = "No Recent Builds Found"
         }
+        showBuildsView()
+    }
+
+    private func showBuildsView() {
         fallbackView.isHidden = true
         buildsTable.isHidden = false
     }
+    
+    private func showFallbackView() {
+        fallbackView.isHidden = false
+        buildsTable.isHidden = true
+    }
 
-    //NSTableViewDataSource
+    // MARK: - NSTableViewDataSource
     func numberOfRows(in tableView: NSTableView) -> Int {
-        if model != nil {
-            return model.allBuilds.count
-        } else {
-            return 0
-        }
+        return model.allBuilds.count
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {

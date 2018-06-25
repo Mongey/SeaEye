@@ -14,41 +14,18 @@ class BuildView: NSTableCellView {
     @IBOutlet var branchName: NSTextField!
     @IBOutlet var timeAndBuildNumber: NSTextField!
     @IBOutlet var openURLButton: NSButton!
-    var url: URL?
+    var url: URL!
 
     func setupForBuild(build: CircleCIBuild) {
+        let decorator = BuildDecorator.init(build: build)
         url = build.buildUrl
-        statusAndSubject.stringValue = build.status.capitalized
+        statusAndSubject.stringValue = decorator.statusAndSubject()
+        branchName.stringValue = decorator.branchName()
+        timeAndBuildNumber.stringValue = decorator.timeAndBuildNumber()
 
-        if build.status == "no_tests" {
-            statusAndSubject.stringValue = "No tests"
-        }
-        if build.subject != nil {
-            statusAndSubject.stringValue += ": \(build.subject!)"
-        }
-        switch build.status {
-        case "success": setColors(greenColor())
-        case "fixed": setColors(greenColor())
-        case "no_tests": setColors(redColor())
-        case "failed": setColors(redColor())
-        case "timedout": setColors(redColor())
-        case "running": setColors(blueColor())
-        case "canceled": setColors(grayColor())
-        case "retried": setColors(grayColor())
-        default:
-            print("unknown status" + build.status)
-        }
-        branchName.stringValue = "\(build.branch) | \(build.reponame)"
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm MMM dd"
-        timeAndBuildNumber.stringValue = dateFormatter.string(from: build.startTime) + " | Build #\(build.buildNum)"
-
-        if build.authorName != nil {
-            timeAndBuildNumber.stringValue = dateFormatter.string(from: build.startTime) + " | Build #\(build.buildNum)" + " | By \(build.authorName!)"
-
-        }
-        if isDarkModeEnabled() {
-            openURLButton.image = NSImage(named: NSImage.Name(rawValue: "open-alt"))
+        if let color = decorator.statusColor() {
+            statusAndSubject.textColor = color
+            statusColorBox.fillColor = color
         }
     }
 

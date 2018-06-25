@@ -48,7 +48,9 @@ class SeaEyeStatus: NSObject {
             "message": "A new version of SeaEye is available (\(version.latestVersion))",
             "url": version.downloadUrl.absoluteString
         ]
-        let notification = Notification(name: Notification.Name(rawValue: "SeaEyeAlert"), object: self, userInfo: info)
+        let notification = Notification(name: SeaEyeNotifications.alert.notification,
+                                        object: self,
+                                        userInfo: info)
         NotificationCenter.default.post(notification)
         self.hasUpdate = true
     }
