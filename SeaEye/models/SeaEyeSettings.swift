@@ -1,33 +1,57 @@
-//
-//  SeaEyeSettings.swift
-//  SeaEye
-//
-//  Created by Conor Mongey on 16/06/2018.
-//  Copyright © 2018 Nolaneo. All rights reserved.
-//
-
 import Foundation
 
-struct NewSettings: Codable {
-    static let defaultsKey: String = "SeaEyeSettings2"
+struct Settings: Codable {
+    private static let defaultsKey: String = "SeaEyeSettings2"
 
     var clients: [MiniClient]
-}
 
-struct MiniClient: Codable {
-    let apiKey: String
-    let url: String
-    let projects: [Project]
+    static func load(userDefaults: UserDefaults = UserDefaults.standard) -> Settings {
+        var settings = Settings(clients: [])
+        if let settingsString = userDefaults.string(forKey: self.defaultsKey) {
+            let decoder = JSONDecoder()
+            if let data = settingsString.data(using: .utf8) {
+                do {
+                    settings = try decoder.decode(Settings.self, from: data)
+                    return settings
+                } catch let error {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+        return settings
+    }
 
-    func client() -> CircleCIClient {
-        let client = CircleCIClient.init()
-        client.baseURL = url
-        client.token = apiKey
-        return client
+    func save(userDefaults: UserDefaults = UserDefaults.standard) {
+        for client in clients {
+            print("Saving \(client)")
+        }
+
+        let jsonEncoder = JSONEncoder()
+
+        do {
+            let jsonData = try jsonEncoder.encode(self)
+            let json = String(data: jsonData, encoding: String.Encoding.utf8)
+            userDefaults.setValue(json, forKey: Settings.defaultsKey)
+        } catch let error {
+            print(error.localizedDescription)
+        }
+    }
+
+    func numberOfProjects() -> Int {
+        return clients.compactMap { $0.projects.count }.reduce(0, { $0 + $1 })
     }
 }
 
-struct Settings: Codable {
+struct OldSettings: Codable {
+    enum Keys: String {
+        case apiKey = "SeaEyeAPIKey"
+        case organisation = "SeaEyeOrganization"
+        case projects = "SeaEyeProjects"
+        case branchFilter = "SeaEyeBranches"
+        case userFilter = "SeaEyeUsers"
+        case notify = "SeaEyeNotify"
+    }
+
     var apiKey: String?
     var organization: String?
     var projectsString: String?
@@ -35,62 +59,33 @@ struct Settings: Codable {
     var userFilter: String?
     var notify: Bool = true
 
-    static func load(userDefaults: UserDefaults = UserDefaults.standard) -> Settings {
-        var settings = Settings.init()
-        if let settingsV2 = userDefaults.string(forKey: "SeaEyeSettings2") {
-            let decoder = JSONDecoder.init()
-            if let data = settingsV2.data(using: .utf8) {
-                do {
-                    settings = try decoder.decode(Settings.self, from: data)
-                } catch let error{
-                    print(error.localizedDescription)
-                }
-            }
-        } else {
-            settings = loadFromOldSettings(userDefaults: userDefaults)
-        }
-        return settings
-    }
-
     static func loadFromOldSettings(userDefaults: UserDefaults = UserDefaults.standard) -> Settings {
         var settings = self.init()
-        settings.apiKey = userDefaults.string(forKey: "SeaEyeAPIKey")
-        settings.organization = userDefaults.string(forKey: "SeaEyeOrganization")
-        settings.projectsString = userDefaults.string(forKey: "SeaEyeProjects")
-        settings.branchFilter = userDefaults.string(forKey: "SeaEyeBranches")
-        settings.userFilter = userDefaults.string(forKey: "SeaEyeUsers")
-        settings.notify = userDefaults.bool(forKey: "SeaEyeNotify")
-        settings.save(userDefaults: userDefaults)
-        return settings
+        settings.apiKey = userDefaults.string(forKey: Keys.apiKey.rawValue)
+        settings.organization = userDefaults.string(forKey: Keys.organisation.rawValue)
+        settings.projectsString = userDefaults.string(forKey: Keys.projects.rawValue)
+        settings.branchFilter = userDefaults.string(forKey: Keys.branchFilter.rawValue)
+        settings.userFilter = userDefaults.string(forKey: Keys.userFilter.rawValue)
+        settings.notify = userDefaults.bool(forKey: Keys.notify.rawValue)
+
+        return settings.toNewSettings()
     }
 
-    func save(userDefaults: UserDefaults) {
-        let jsonEncoder = JSONEncoder()
-
-        do {
-            let jsonData = try jsonEncoder.encode(self)
-            let json = String(data: jsonData, encoding: String.Encoding.utf8)
-            userDefaults.setValue(json, forKey: "SeaEyeSettings2")
-        } catch let error {
-            print(error.localizedDescription)
-        }
-    }
-
-    func toNewSettings() -> NewSettings {
-        let projectsArray: [String] = self.projectsString!.components(separatedBy: CharacterSet.whitespaces)
-        let filter = Filter.init(userFilter: userFilter, branchFilter: branchFilter)
+    private func toNewSettings() -> Settings {
+        let projectsArray: [String] = projectsString!.components(separatedBy: CharacterSet.whitespaces)
+        let filter = Filter(userFilter: userFilter, branchFilter: branchFilter)
         let projects: [Project] = projectsArray.map { (name: String) -> Project in
-            Project(name: name,
+            Project(vcsProvider: "github",
                     organisation: self.organization!,
+                    name: name,
                     filter: filter,
-                    notify: self.notify,
-                    vcsProvider: "github")
+                    notify: self.notify)
         }
-        let client = MiniClient(apiKey: self.apiKey!,
+        let client = MiniClient(apiKey: apiKey!,
                                 url: "https://circleci.com",
                                 projects: projects)
 
-        return NewSettings(clients: [client])
+        return Settings(clients: [client])
     }
 
     func valid() -> Bool {

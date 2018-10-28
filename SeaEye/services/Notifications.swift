@@ -1,71 +1,53 @@
-//
-//  Notifications.swift
-//  SeaEye
-//
-//  Created by Conor Mongey on 16/06/2018.
-//  Copyright © 2018 Nolaneo. All rights reserved.
-//
-
 import Cocoa
 import Foundation
 
-enum SeaEyeNotifications: String {
-    case closePopoverController = "SeaEyeClosePopoverController"
-    case updatedBuilds = "SeaEyeUpdatedBuilds"
-    case alert = "SeaEyeAlert"
-    case redBuild = "SeaEyeRedBuild"
-    case greenBuild = "SeaEyeGreenBuild"
-    case yellowBuild = "SeaEyeYellowBuild"
-    case settingsChanged = "SeaEyeSettingsChanged"
-    
-    var notification : Notification.Name  {
-        return Notification.Name(rawValue: self.rawValue )
-    }
-}
-
-func userNotification(_ userInfo: [String: Any]) -> NSUserNotification {
+func downloadAvailableNotification(url: String, version: String) -> NSUserNotification {
+    let message = "A new version of SeaEye is available: \(version)"
     let notification = NSUserNotification()
     notification.title = "SeaEye"
-    if let message = userInfo["message"] as? String {
-        notification.informativeText = message
-    }
-    if let url = userInfo["url"] as? String {
-        notification.setValue(true, forKey: "_showsButtons")
-        notification.hasActionButton = true
-        notification.actionButtonTitle = "Download"
-        notification.userInfo = ["url": url]
-    }
+    notification.informativeText = message
+    notification.setValue(true, forKey: "_showsButtons")
+    notification.hasActionButton = true
+    notification.actionButtonTitle = "Download"
+    notification.userInfo = ["url": url]
     return notification
 }
 
-func notifcationForBuild(build: CircleCIBuild) -> NSUserNotification {
-    let notification = NSUserNotification()
-    notification.setValue(false, forKey: "_identityImageHasBorder")
-    notification.setValue(nil, forKey: "_imageURL")
-    notification.userInfo = ["url": build.buildUrl.absoluteString]
-    return notification
-}
+struct BuildsNotification {
+    let title: String
+    let subtitle: String
+    let informativeText: String?
+    let url: String
 
-func buildNotification(build: CircleCIBuild, count: Int) -> NSUserNotification {
-    let notification = notifcationForBuild(build: build)
-    let endTitle = build.status == "success" ? "Sucess" : "Failed"
-    let plural = build.status == "success" ?  "successful" : "failed"
-    let imageFile = build.status == "success" ? "build-passed" : "build-failed"
+    private let build: CircleCIBuild
 
-    notification.title = "SeaEye: Build \(endTitle)"
-    if count > 1 {
-        notification.subtitle = "You have \(count) \(plural) builds"
-    } else {
-        notification.subtitle = build.subject
-        notification.informativeText = build.authorName
+    init(_ build: CircleCIBuild, count: Int) {
+        let endTitle = build.status == .success ? "Sucess" : "Failed"
+        let plural = build.status == .success ? "successful" : "failed"
+        self.build = build
+        self.title = "SeaEye: Build \(endTitle)"
+        self.subtitle = count > 1 ? "You have \(count) \(plural) builds" : (build.subject ?? "")
+        self.url = build.buildUrl.absoluteString
+        self.informativeText = build.authorName
     }
 
-    let image = NSImage(named: NSImage.Name(rawValue: imageFile))
-    notification.setValue(image, forKey: "_identityImage")
-    return notification
-}
+    func toNotification() -> NSUserNotification {
+        let notification = NSUserNotification()
 
-func closePopover() {
-    NotificationCenter.default.post(name: SeaEyeNotifications.closePopoverController.notification,
-                                    object: nil)
+        notification.setValue(false, forKey: "_identityImageHasBorder")
+        notification.setValue(nil, forKey: "_imageURL")
+
+        notification.setValue(image(), forKey: "_identityImage")
+        notification.userInfo = ["url": self.url]
+        notification.informativeText = informativeText
+        notification.title = title
+        notification.subtitle = subtitle
+
+        return notification
+    }
+
+    private func image() -> NSImage? {
+        let imageFile = build.status == .success ? "build-passed" : "build-failed"
+        return NSImage(named: imageFile)
+    }
 }

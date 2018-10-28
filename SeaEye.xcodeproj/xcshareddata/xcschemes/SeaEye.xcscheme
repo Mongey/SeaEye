@@ -22,13 +22,13 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "YES"
+            buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "60C73BEA19FC025A0067CDCA"
+               BlueprintIdentifier = "F4D7C2522191F5B3005B67D5"
                BuildableName = "SeaEyeTests.xctest"
                BlueprintName = "SeaEyeTests"
                ReferencedContainer = "container:SeaEye.xcodeproj">
@@ -40,8 +40,21 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      codeCoverageEnabled = "YES"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES"
+            testExecutionOrdering = "random">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F4D7C2522191F5B3005B67D5"
+               BuildableName = "SeaEyeTests.xctest"
+               BlueprintName = "SeaEyeTests"
+               ReferencedContainer = "container:SeaEye.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
          <TestableReference
             skipped = "NO"
             testExecutionOrdering = "random">

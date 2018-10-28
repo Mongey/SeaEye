@@ -1,67 +1,57 @@
 import Cocoa
 import XCTest
 
-class BuildsForUserTests: XCTestCase {
-    func testBuildsForUser() {
-        let builds = [CircleCIBuild]()
-        let result = buildsForUser(builds: builds, userRegex: nil, branchRegex: nil)
-
-        XCTAssertEqual(result.count, 0)
-    }
-
+class FilterTests: XCTestCase {
     func testBuildsForUserWithUserRegex() {
-        let homerBuild = CircleCIBuild.init(branch: "master",
-                                            project: "foobar",
-                                            status: "failure",
-                                            subject: "wat",
-                                            user: "Homer Simpson",
-                                            buildNum: 5,
-                                            url: URL.init(string: "http://google.com")!,
-                                            date: Date())
-        let homerDevBuild = CircleCIBuild.init(branch: "dev",
-                                            project: "foobar",
-                                            status: "failure",
-                                            subject: "wat",
-                                            user: "Homer Simpson",
-                                            buildNum: 5,
-                                            url: URL.init(string: "http://google.com")!,
-                                            date: Date())
-        let bartBuild = CircleCIBuild.init(branch: "master",
+        let homerBuild = CircleCIBuild(branch: "master",
+                                       project: "foobar",
+                                       status: .failed,
+                                       subject: "wat",
+                                       user: "Homer Simpson",
+                                       buildNum: 5,
+                                       url: URL(string: "http://google.com")!,
+                                       startTime: Date(),
+                                       queuedAt: nil,
+                                       stopTime: nil)
+        let homerDevBuild = CircleCIBuild(branch: "dev",
                                           project: "foobar",
-                                          status: "failure",
+                                          status: .failed,
                                           subject: "wat",
-                                          user: "Bart Simpson",
-                                          buildNum: 4,
-                                          url: URL.init(string: "http://google.com")!,
-                                          date: Date())
+                                          user: "Homer Simpson",
+                                          buildNum: 5,
+                                          url: URL(string: "http://google.com")!,
+                                          startTime: Date(),
+                                          queuedAt: nil,
+                                          stopTime: nil)
+        let bartBuild = CircleCIBuild(branch: "master",
+                                      project: "foobar",
+                                      status: .failed,
+                                      subject: "wat",
+                                      user: "Bart Simpson",
+                                      buildNum: 4,
+                                      url: URL(string: "http://google.com")!,
+                                      startTime: Date(),
+                                      queuedAt: nil,
+                                      stopTime: nil)
 
-        var buildsByBart, buildsByHomer, masterBuilds: NSRegularExpression?
-        do {
-            buildsByBart = try NSRegularExpression(pattern: "^Bart", options: NSRegularExpression.Options.caseInsensitive)
-        } catch let error{
-            XCTFail(error.localizedDescription)
-        }
-        do {
-            buildsByHomer = try NSRegularExpression(pattern: "^Homer", options: NSRegularExpression.Options.caseInsensitive)
-        } catch let error{
-            XCTFail(error.localizedDescription)
-        }
-        do {
-            masterBuilds = try NSRegularExpression(pattern: "^master", options: NSRegularExpression.Options.caseInsensitive)
-        } catch let error{
-            XCTFail(error.localizedDescription)
-        }
-
-        let result = buildsForUser(builds: [homerBuild], userRegex: buildsByBart, branchRegex: nil)
+        // All Barts builds
+        var filter = Filter.init(userFilter: "^Bart", branchFilter: nil)
+        var result = filter.builds([homerBuild])
         XCTAssertEqual(result.count, 0)
-        let correctResult = buildsForUser(builds: [homerBuild, bartBuild], userRegex: buildsByHomer, branchRegex: nil)
-        XCTAssertEqual(correctResult.count, 1)
 
-        let masterResult = buildsForUser(builds: [homerBuild, homerDevBuild, bartBuild], userRegex: nil, branchRegex: masterBuilds)
-        XCTAssertEqual(masterResult.count, 2)
+        // All Homers builds
+        filter = Filter.init(userFilter: "^Homer", branchFilter: nil)
+        result = filter.builds([homerBuild, bartBuild])
+        XCTAssertEqual(result.count, 1)
 
-        let masterHomerResult = buildsForUser(builds: [homerBuild, homerDevBuild, bartBuild], userRegex: buildsByHomer, branchRegex: masterBuilds)
-        XCTAssertEqual(masterHomerResult.count, 1)
+        // All master builds
+        filter = Filter.init(userFilter: nil, branchFilter: "master")
+        result = filter.builds([homerBuild, homerDevBuild, bartBuild])
+        XCTAssertEqual(result.count, 2)
 
+        // All Homers builds on master
+        filter = Filter.init(userFilter: "^Homer", branchFilter: "master")
+        result = filter.builds([homerBuild, homerDevBuild, bartBuild])
+        XCTAssertEqual(result.count, 1)
     }
 }

@@ -5,16 +5,27 @@ struct CircleCIProject: Decodable {
     let reponame: String
     let vcsUrl: String
     let following: Bool
+
     func description() -> String {
         return "\(username)/\(reponame)"
     }
+
+    func toProject() -> Project {
+        return Project(
+            vcsProvider: "github",
+            organisation: username,
+            name: reponame,
+            filter: nil,
+            notify: true
+        )
+    }
 }
 
-struct Me: Decodable {
+struct CircleCIUser: Decodable {
     let name: String
 }
 
-public class CircleCIClient {
+public class CircleCIClient: BuildClient {
     var baseURL: String = "https://circleci.com"
     var token: String = ""
 
@@ -26,8 +37,8 @@ public class CircleCIClient {
         request(get(path: "project/\(name)"), of: [CircleCIBuild].self, completion: completion)
     }
 
-    func getMe(completion: (((Result<Me>) -> Void)?)) {
-        request(get(path: "me"), of: Me.self, completion: completion)
+    func getMe(completion: (((Result<CircleCIUser>) -> Void)?)) {
+        request(get(path: "me"), of: CircleCIUser.self, completion: completion)
     }
 
     private func get(path: String) -> URLRequest {
@@ -39,6 +50,6 @@ public class CircleCIClient {
     }
 
     private func url(path: String) -> URL {
-        return URL(string: "\(baseURL)/api/v1.1/\(path)?circle-token=\(self.token)")!
+        return URL(string: "\(baseURL)/api/v1.1/\(path)?circle-token=\(token)")!
     }
 }

@@ -1,35 +1,47 @@
-//
-//  Filter.swift
-//  SeaEye
-//
-//  Created by Conor Mongey on 16/06/2018.
-//  Copyright © 2018 Nolaneo. All rights reserved.
-//
-
 import Foundation
 
 struct Filter: Codable {
-    let userFilter: String?
-    let branchFilter: String?
+    var userFilter: String
+    var branchFilter: String
 
     init(userFilter: String?, branchFilter: String?) {
-        self.userFilter = userFilter
-        self.branchFilter = branchFilter
+        self.userFilter = userFilter ?? "*"
+        self.branchFilter = branchFilter ?? "*"
+    }
+
+    func builds(_ builds: [CircleCIBuild]) -> [CircleCIBuild] {
+        return builds.filter({
+            self.buildMatches($0)
+        })
     }
 
     func branchRegex() -> NSRegularExpression? {
-        if branchFilter != nil {
-            return try? NSRegularExpression(pattern: branchFilter!,
-                                            options: NSRegularExpression.Options.caseInsensitive)
-        }
-        return nil
+        return try? NSRegularExpression(pattern: branchFilter,
+                                        options: NSRegularExpression.Options.caseInsensitive)
     }
-    
+
     func userRegex() -> NSRegularExpression? {
-        if userFilter != nil {
-            return try? NSRegularExpression(pattern: userFilter!,
-                                            options: NSRegularExpression.Options.caseInsensitive)
+        return try? NSRegularExpression(pattern: userFilter,
+                                        options: NSRegularExpression.Options.caseInsensitive)
+    }
+
+    private func buildMatches(_ build: CircleCIBuild) -> Bool {
+        var matching = true
+        if let user = userRegex() {
+            let authorName = build.authorName ?? ""
+
+            matching = user.matches(in: authorName,
+                                    options: [],
+                                    range: NSRange(authorName.startIndex..., in: authorName)).count > 0
         }
-        return nil
+
+        if matching {
+            if let branch = branchRegex() {
+                matching = branch.matches(in: build.branch,
+                                          options: [],
+                                          range: NSRange(build.branch.startIndex..., in: build.branch)).count > 0
+            }
+        }
+        return matching
     }
 }

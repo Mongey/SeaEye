@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.12" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -14,11 +14,11 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <view id="zyr-N0-mXZ">
+        <view identifier="iconController" id="zyr-N0-mXZ">
             <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <button identifier="IconButton" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Jt-GG-4o5">
+                <button identifier="IconButton" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Jt-GG-4o5" customClass="SeaEyeIcon" customModule="SeaEye" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="circleci" imagePosition="overlaps" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="k9m-Cj-9cd">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>

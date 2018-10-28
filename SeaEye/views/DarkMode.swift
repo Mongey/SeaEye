@@ -8,9 +8,10 @@
 
 import Foundation
 
-func isDarkModeEnabled() -> Bool {
-    let dictionary  = UserDefaults.standard.persistentDomain(forName: UserDefaults.globalDomain)
-    if let interfaceStyle = dictionary?["AppleInterfaceStyle"] as? NSString {
+func darkModeEnabled() -> Bool {
+    let darkModeUserDefaultsKey = "AppleInterfaceStyle"
+    let dictionary = UserDefaults.standard.persistentDomain(forName: UserDefaults.globalDomain)
+    if let interfaceStyle = dictionary?[darkModeUserDefaultsKey] as? NSString {
         return interfaceStyle.localizedCaseInsensitiveContains("dark")
     }
     return false

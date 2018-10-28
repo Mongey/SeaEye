@@ -9,14 +9,29 @@
 import Cocoa
 
 class SeaEyeIconController: NSViewController {
-    @IBOutlet var iconButton: NSButton!
+    @IBOutlet var iconButton: SeaEyeIcon!
+    let secondsToRefreshBuilds = 60
 
-    var model = CircleCIModel()
     var popover = NSPopover()
-    var popoverController: SeaEyePopoverController?
+    var settings = Settings.load()
+    var buildUpdateListeners: NSMutableArray = NSMutableArray()
+    var buildUpdate: NSMutableArray = NSMutableArray()
+    var timers: [Timer] = []
+
+    var popoverController: SeaEyePopoverController!
 
     override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+
+        popover.behavior = NSPopover.Behavior.transient
+        popover.setAccessibilityIdentifier("popoverController")
+
+        if let popoverController = SeaEyePopoverController(nibName: SeaEyePopoverController.NibName, bundle: nil) as SeaEyePopoverController? {
+            self.popoverController = popoverController
+            popover.contentViewController = popoverController
+        }
+
+        loadApplicationFromSettings()
     }
 
     required init?(coder: NSCoder) {
@@ -25,106 +40,56 @@ class SeaEyeIconController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
+        loadApplicationFromSettings()
     }
 
-    func setup() {
-        self.resetIcon()
-        if let popoverController = SeaEyePopoverController(nibName: NSNib.Name(rawValue: "SeaEyePopoverController"), bundle: nil) as SeaEyePopoverController? {
-            popoverController.model = self.model
-            self.popoverController = popoverController
+    // gets all the clients, gets builds every 30 seconds, updating the popoverController
+    private func loadApplicationFromSettings() {
+        resetStuff()
+
+        let popoverControllerBuildListener = PopoverContollerBuildUpdateListener(popoverController: popoverController)
+        let buildNotificationListener = NotificationListener()
+        let iconListener = SeaEyeIconUpdateListener(iconButton)
+        let clientBuildUpdateListeners = clientBuildUpdateListenersFromSettings(listeners: [buildNotificationListener, popoverControllerBuildListener, iconListener])
+
+        for cbul in clientBuildUpdateListeners {
+            cbul.getBuilds()
         }
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(forName: SeaEyeNotifications.alert.notification,
-                                       object: nil,
-                                       queue: OperationQueue.main,
-                                       using: alert)
-        notificationCenter.addObserver(forName: SeaEyeNotifications.redBuild.notification,
-                                       object: nil,
-                                       queue: OperationQueue.main,
-                                       using: setRedBuildIcon)
-        notificationCenter.addObserver(forName: SeaEyeNotifications.greenBuild.notification,
-                                       object: nil,
-                                       queue: OperationQueue.main,
-                                       using: setGreenBuildIcon)
-        notificationCenter.addObserver(forName: SeaEyeNotifications.yellowBuild.notification,
-                                       object: nil,
-                                       queue: OperationQueue.main,
-                                       using: setYellowBuildIcon)
-        notificationCenter.addObserver(forName: SeaEyeNotifications.closePopoverController.notification,
-                                       object: nil,
-                                       queue: OperationQueue.main,
-                                       using: closePopover)
 
-        NSEvent.addGlobalMonitorForEvents(
-            matching: [.leftMouseUp, .rightMouseUp],
-            handler: closePopover
-        )
-    }
-
-    func alert(notification: Notification) {
-        if let userInfo = notification.userInfo {
-            if let foo = userInfo as? [String: Any]{
-                NSUserNotificationCenter.default.deliver(userNotification(foo))
-            }
+        timers = clientBuildUpdateListeners.map { (cbul) -> Timer in
+            return Timer.scheduledTimer(
+                timeInterval: TimeInterval(secondsToRefreshBuilds),
+                target: cbul,
+                selector: #selector(cbul.getBuilds),
+                userInfo: nil,
+                repeats: true
+            )
         }
     }
 
-    func setGreenBuildIcon(notification: Notification) {
-        if let userNotification = imageUserNotification(image: "circleci-success", notification: notification) {
-            NSUserNotificationCenter.default.deliver(userNotification)
+    private func clientBuildUpdateListenersFromSettings(listeners: [BuildUpdateListener]) -> [ClientBuildUpdater] {
+        let clients = Settings.load().clients
+        return clients.flatMap { (client) -> [ClientBuildUpdater] in
+            client.projects.map({
+                ClientBuildUpdater(listeners: listeners,
+                                   client: client.client(),
+                                   project: $0)
+            })
         }
     }
 
-    func setRedBuildIcon(notification: Notification) {
-        if let userNotification = imageUserNotification(image: "circleci-failed", notification: notification) {
-            NSUserNotificationCenter.default.deliver(userNotification)
-        }
+    private func resetStuff() {
+        resetTimers()
+        buildUpdate.removeAllObjects()
+        buildUpdateListeners.removeAllObjects()
     }
 
-    func imageUserNotification(image: String, notification: Notification) -> NSUserNotification? {
-        iconButton.image = NSImage(named: NSImage.Name(rawValue: image))
-
-        if UserDefaults.standard.bool(forKey: "SeaEyeNotify") {
-            if let build = notification.userInfo!["build"] as? CircleCIBuild{
-                if let count = notification.userInfo!["count"] as? Int {
-                    return buildNotification(build: build, count: count)
-                }
-            }
-        }
-        return nil
+    private func resetTimers() {
+        for timer in timers { timer.invalidate() }
     }
 
-    func setYellowBuildIcon(notification: Notification) -> Void {
-        let imageFile = "circleci-pending"
-        iconButton.image = NSImage(named: NSImage.Name(rawValue: imageFile))
-    }
-
-    func notifcationForBuild(build: CircleCIBuild) -> NSUserNotification {
-        let notification = NSUserNotification()
-        notification.setValue(false, forKey: "_identityImageHasBorder")
-        notification.setValue(nil, forKey: "_imageURL")
-        notification.userInfo = ["url": build.buildUrl.absoluteString]
-        return notification
-    }
-
-    private func resetIcon() {
-        iconButton.image = NSImage(named: NSImage.Name(rawValue: "circleci"))
-    }
-
-    @IBAction func openPopover(_ sender: NSButton) {
-        if popover.isShown {
-            popover.close()
-        } else {
-            resetIcon()
-            popover.contentViewController = popoverController
-            popover.show(relativeTo: self.view.frame, of: self.view, preferredEdge: NSRectEdge.minY)
-        }
-    }
-
-    func closePopover(_ aEvent: Any? = nil) {
-        if popover.isShown {
-            popover.close()
-        }
+    @IBAction func openPopover(_: NSButton) {
+        iconButton.reset()
+        popover.show(relativeTo: view.frame, of: view, preferredEdge: NSRectEdge.minY)
     }
 }

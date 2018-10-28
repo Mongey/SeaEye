@@ -1,11 +1,3 @@
-//
-//  DateFormatter.swift
-//  SeaEye
-//
-//  Created by Conor Mongey on 15/06/2018.
-//  Copyright © 2018 Nolaneo. All rights reserved.
-//
-
 import Foundation
 
 extension DateFormatter {

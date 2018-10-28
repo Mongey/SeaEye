@@ -11,23 +11,32 @@ import Foundation
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
-
     var statusBarItem: NSStatusItem = NSStatusItem()
     var statusBarIconViewController: SeaEyeIconController!
 
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
+    func applicationDidFinishLaunching(_: Notification) {
         NSUserNotificationCenter.default.delegate = self
-        self.initialSetup()
-        self.statusBarItem = NSStatusBar.system.statusItem(withLength: -1)
-        self.setupApplicationMenuViewController()
+
+        let args = ProcessInfo.processInfo.arguments
+        let resetArgs = args.filter({ $0 == "resetDefaults" }).count == 1
+        if resetArgs {
+            let defaults = UserDefaults.standard
+            defaults.dictionaryRepresentation().keys.forEach(defaults.removeObject(forKey:))
+        }
+
+        initialSetup()
+        statusBarItem = NSStatusBar.system.statusItem(withLength: -1)
+        setupApplicationMenuViewController()
     }
 
     func setupApplicationMenuViewController() {
-        statusBarIconViewController = SeaEyeIconController(nibName: NSNib.Name(rawValue: "SeaEyeIconController"), bundle: nil)
-        statusBarItem.view = statusBarIconViewController?.view
+        statusBarIconViewController = SeaEyeIconController(nibName: "SeaEyeIconController", bundle: nil)
+        statusBarItem.view = statusBarIconViewController.view
     }
+
     // MARK: - NSUserNotificationCenterDelegate
-    func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
+
+    func userNotificationCenter(_: NSUserNotificationCenter, shouldPresent _: NSUserNotification) -> Bool {
         return true
     }
 
@@ -41,10 +50,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     }
 
     fileprivate func initialSetup() {
+        // TODO: - Store this in the new Settings
         let userDefaults = UserDefaults.standard
-        if userDefaults.bool(forKey: "SeaEyePerformedFirstSetup") == false {
+        let firstSetupKey = "SeaEyePerformedFirstSetup"
+        if userDefaults.bool(forKey: firstSetupKey) == false {
             userDefaults.set(true, forKey: "SeaEyeNotify")
-            userDefaults.set(true, forKey: "SeaEyePerformedFirstSetup")
+            userDefaults.set(true, forKey: firstSetupKey)
             ApplicationStartupManager.toggleLaunchAtStartup()
         }
     }

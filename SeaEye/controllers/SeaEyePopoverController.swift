@@ -9,20 +9,19 @@
 import Cocoa
 
 class SeaEyePopoverController: NSViewController {
-    @IBOutlet weak var subcontrollerView: NSView!
-    @IBOutlet weak var openSettingsButton: NSButton!
-    @IBOutlet weak var openBuildsButton: NSButton!
-    @IBOutlet weak var openUpdatesButton: NSButton!
-    @IBOutlet weak var shutdownButton: NSButton!
+    static let NibName = "SeaEyePopoverController"
+    @IBOutlet var subcontrollerView: NSView!
+    @IBOutlet var openSettingsButton: NSButton!
+    @IBOutlet var openBuildsButton: NSButton!
+    @IBOutlet var openUpdatesButton: VersionButton!
+    @IBOutlet var shutdownButton: NSButton!
 
-    var settingsViewController: SeaEyeSettingsController!
     var buildsViewController: SeaEyeBuildsController!
     var updatesViewController: SeaEyeUpdatesController!
-    var model: CircleCIModel!
-    var applicationStatus: SeaEyeStatus!
 
     override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        setupNibControllers()
     }
 
     required init?(coder: NSCoder) {
@@ -31,53 +30,49 @@ class SeaEyePopoverController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViewControllers()
         setup()
     }
 
-    func setup() {
-        setupViewControllers()
-        showUpdateButtonIfAppropriate()
+    private func setup() {
+        checkForUpdateAndNotify()
+    }
+
+    func setBuilds(_ builds: [CircleCIBuild]) {
+        buildsViewController?.builds = builds.sorted { $0.startTime.timeIntervalSince1970 > $1.startTime.timeIntervalSince1970 }
+        buildsViewController?.reloadBuilds()
+        if buildsViewController == nil {
+            print("There's no build contoller")
+        }
     }
 
     fileprivate func setupViewControllers() {
-        setupNibControllers()
-
-        buildsViewController.model = model
-        updatesViewController.applicationStatus = self.applicationStatus
         openBuildsButton.isHidden = true
         subcontrollerView.addSubview(buildsViewController.view)
     }
 
     fileprivate func setupNibControllers() {
-        settingsViewController = SeaEyeSettingsController(nibName: NSNib.Name(rawValue: "SeaEyeSettingsController"),
-                                                          bundle: nil,
-                                                          parentController: self)
-        buildsViewController = SeaEyeBuildsController(nibName: NSNib.Name(rawValue: "SeaEyeBuildsController"),
+        buildsViewController = SeaEyeBuildsController(nibName: "SeaEyeBuildsController",
                                                       bundle: nil)
-        updatesViewController = SeaEyeUpdatesController(nibName: NSNib.Name(rawValue: "SeaEyeUpdatesController"),
+        updatesViewController = SeaEyeUpdatesController(nibName: "SeaEyeUpdatesController",
                                                         bundle: nil)
     }
 
-    @IBAction func openSettings(_ sender: NSButton) {
-        openSettingsButton.isHidden = true
-        openUpdatesButton.isHidden = true
-        shutdownButton.isHidden = true
-        openBuildsButton.isHidden = false
-        buildsViewController.view.removeFromSuperview()
-        subcontrollerView.addSubview(settingsViewController.view)
+    @IBAction func openSettings(_: NSButton) {
+        let prefrencesWindowVC = PreferencesWindowController()
+        prefrencesWindowVC.showWindow(self)
     }
 
-    @IBAction func openBuilds(_ sender: NSButton) {
-        showUpdateButtonIfAppropriate()
+    @IBAction func openBuilds(_: NSButton) {
+        checkForUpdateAndNotify()
         openBuildsButton.isHidden = true
         shutdownButton.isHidden = false
         openSettingsButton.isHidden = false
-        settingsViewController.view.removeFromSuperview()
         updatesViewController.view.removeFromSuperview()
         subcontrollerView.addSubview(buildsViewController.view)
     }
 
-    @IBAction func openUpdates(_ sender: NSButton) {
+    @IBAction func openUpdates(_: NSButton) {
         openUpdatesButton.isHidden = true
         openSettingsButton.isHidden = true
         shutdownButton.isHidden = true
@@ -86,27 +81,30 @@ class SeaEyePopoverController: NSViewController {
         subcontrollerView.addSubview(updatesViewController.view)
     }
 
-    @IBAction func shutdownApplication(_ sender: NSButton) {
+    @IBAction func shutdownApplication(_: NSButton) {
         NSApplication.shared.terminate(self)
     }
 
-    fileprivate func showUpdateButtonIfAppropriate() {
-        if applicationStatus != nil {
-            if applicationStatus.hasUpdate {
-                let versionString = NSMutableAttributedString(string: applicationStatus.version!.latestVersion)
-                let range = NSRange(location: 0, length: applicationStatus.version!.latestVersion.count)
-                versionString.addAttribute(
-                    NSAttributedStringKey.foregroundColor,
-                    value: NSColor.red,
-                    range: range
-                )
-                versionString.fixAttributes(in: range)
-                openUpdatesButton.attributedTitle = versionString
-                openUpdatesButton.isHidden = false
+    fileprivate func checkForUpdateAndNotify() {
+        GithubClient.latestRelease { result in
+            switch result {
+            case let .success(latestRelease):
+                self.newVersionOfSeaEye(latestRelease)
+            case .failure:
+                print("Failed to get version")
             }
-            return
         }
+    }
 
-        openUpdatesButton.isHidden = true
+    private func newVersionOfSeaEye(_ latestRelease: GithubRelease) {
+        let updateAvailable = VersionNumber.current() < latestRelease.version()
+        print("Update: \(updateAvailable). Current \(VersionNumber.current()) |  \(latestRelease.version())")
+
+        if updateAvailable {
+            openUpdatesButton.version = latestRelease.version().description
+            updatesViewController.version = latestRelease.toSeaEye()
+            let notification = downloadAvailableNotification(url: latestRelease.htmlUrl, version: latestRelease.version().description)
+            NSUserNotificationCenter.default.deliver(notification)
+        }
     }
 }

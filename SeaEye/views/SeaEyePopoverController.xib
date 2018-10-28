@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.12" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,13 +18,13 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <view wantsLayer="YES" id="18V-Gk-M1h">
+        <view identifier="popoverView" wantsLayer="YES" id="18V-Gk-M1h">
             <rect key="frame" x="0.0" y="0.0" width="300" height="400"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <customView identifier="SubcontrollerView" autoresizesSubviews="NO" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hzT-j3-Atn">
+                <customView identifier="SubcontrollerView" autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hzT-j3-Atn">
                     <rect key="frame" x="0.0" y="0.0" width="300" height="360"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <accessibility identifier="SubcontrollerView"/>
                 </customView>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PzJ-Xs-qa7">
                     <rect key="frame" x="-2" y="368" width="304" height="17"/>
@@ -62,7 +62,7 @@
                         <action selector="shutdownApplication:" target="-2" id="NhG-gX-Rav"/>
                     </connections>
                 </button>
-                <button identifier="OpenUpdatesButton" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="59N-QJ-ftt">
+                <button identifier="OpenUpdatesButton" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="59N-QJ-ftt" customClass="VersionButton" customModule="SeaEye" customModuleProvider="target">
                     <rect key="frame" x="196" y="362" width="60" height="23"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="9VE-Mb-A9f"/>
@@ -100,10 +100,15 @@
                 <constraint firstItem="lUS-Wj-shM" firstAttribute="top" secondItem="18V-Gk-M1h" secondAttribute="top" constant="15" id="FUN-ER-e1c"/>
                 <constraint firstAttribute="trailing" secondItem="lUS-Wj-shM" secondAttribute="trailing" constant="10" id="FbO-iQ-edA"/>
                 <constraint firstItem="GEF-ue-G8e" firstAttribute="leading" secondItem="18V-Gk-M1h" secondAttribute="leading" constant="15" id="Opv-Bl-E62"/>
+                <constraint firstAttribute="trailing" secondItem="hzT-j3-Atn" secondAttribute="trailing" id="SbO-XB-8Xd"/>
                 <constraint firstItem="PzJ-Xs-qa7" firstAttribute="leading" secondItem="18V-Gk-M1h" secondAttribute="leading" id="VzI-t7-ewz"/>
+                <constraint firstItem="hzT-j3-Atn" firstAttribute="top" secondItem="GEF-ue-G8e" secondAttribute="bottom" constant="3" id="ekg-va-GWa"/>
                 <constraint firstAttribute="trailing" secondItem="PzJ-Xs-qa7" secondAttribute="trailing" id="h02-IG-puz"/>
+                <constraint firstItem="hzT-j3-Atn" firstAttribute="leading" secondItem="18V-Gk-M1h" secondAttribute="leading" id="hdN-86-hIG"/>
+                <constraint firstAttribute="bottom" secondItem="hzT-j3-Atn" secondAttribute="bottom" id="i6J-Ik-90P"/>
                 <constraint firstItem="PzJ-Xs-qa7" firstAttribute="top" secondItem="18V-Gk-M1h" secondAttribute="top" constant="15" id="sGH-Zz-Bfg"/>
             </constraints>
+            <accessibility description="A view showing recent builds" identifier="popoverView"/>
         </view>
     </objects>
     <resources>

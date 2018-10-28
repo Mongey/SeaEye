@@ -11,8 +11,10 @@ struct VersionNumber: Equatable, CustomStringConvertible, Comparable {
                 return version.versionNumber()
             }
         }
-        return VersionNumber.init(major: 0, minor: 0, development: true)
+        return VersionNumber(major: 0, minor: 0, development: true)
     }
+
+    // MARK: CustomStringConvertible
 
     var description: String {
         var str = "\(major).\(minor)"
@@ -40,7 +42,7 @@ extension String {
         var major = 0
         var minor = 0
 
-        let development = self.contains("-dev")
+        let development = contains("-dev")
         var withoutDevSuffix = self
 
         if development {

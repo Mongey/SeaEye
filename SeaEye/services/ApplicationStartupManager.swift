@@ -1,11 +1,3 @@
-//
-//  ApplicationStartupManager.swift
-//  SeaEye
-//
-//  Created by Conor Mongey on 17/06/2018.
-//  Copyright © 2018 Nolaneo. All rights reserved.
-//
-
 import Foundation
 
 struct ApplicationStartupManager {
@@ -18,10 +10,10 @@ struct ApplicationStartupManager {
             nil,
             kLSSharedFileListSessionLoginItems.takeRetainedValue(),
             nil
-            ).takeRetainedValue() as LSSharedFileList?
+        ).takeRetainedValue() as LSSharedFileList?
         if loginItemsRef != nil {
             if shouldBeToggled {
-                let appUrl: CFURL = URL(fileURLWithPath: self.bundlePath) as CFURL
+                let appUrl: CFURL = URL(fileURLWithPath: bundlePath) as CFURL
 
                 LSSharedFileListInsertItemURL(
                     loginItemsRef,
@@ -47,12 +39,12 @@ struct ApplicationStartupManager {
     }
 
     private static func itemReferencesInLoginItems() -> (existingReference: LSSharedFileListItem?, lastReference: LSSharedFileListItem?) {
-        let appUrl: URL = URL(fileURLWithPath: self.bundlePath)
+        let appUrl: URL = URL(fileURLWithPath: bundlePath)
         let loginItemsRef = LSSharedFileListCreate(
             nil,
             kLSSharedFileListSessionLoginItems.takeRetainedValue(),
             nil
-            ).takeRetainedValue() as LSSharedFileList?
+        ).takeRetainedValue() as LSSharedFileList?
         if loginItemsRef == nil {
             return (nil, nil)
         }
@@ -72,7 +64,7 @@ struct ApplicationStartupManager {
             }
         }
 
-        //The application was not found in the startup list
+        // The application was not found in the startup list
         return (nil, lastItemRef)
     }
 }

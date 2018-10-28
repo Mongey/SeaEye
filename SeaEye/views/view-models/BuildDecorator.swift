@@ -6,27 +6,26 @@
 //  Copyright © 2018 Nolaneo. All rights reserved.
 //
 
-import Foundation
 import Cocoa
+import Foundation
 
 struct BuildDecorator {
-    var build: CircleCIBuild
-    let seperator = "|"
-    let darkModeEnabled: Bool
+    private var build: CircleCIBuild
+    private let seperator = "|"
 
     init(build: CircleCIBuild) {
         self.build = build
-        self.darkModeEnabled = isDarkModeEnabled()
     }
 
     func statusAndSubject() -> String {
-        var status = build.status.capitalized
-
-        if build.status == "no_tests" {
+        if build.status == .noTests {
             return "No tests"
         }
-        if build.subject != nil {
-            status += ": \(build.subject!)"
+
+        var status = build.status.rawValue.capitalized
+
+        if let subject = build.subject {
+            status += ": \(subject)"
         } else {
             if let workflow = build.workflows {
                 status += ": \(workflow.workflowName!) - \(workflow.jobName!)"
@@ -38,16 +37,16 @@ struct BuildDecorator {
 
     func statusColor() -> NSColor? {
         switch build.status {
-        case "success": return greenColor()
-        case "fixed": return greenColor()
-        case "no_tests": return redColor()
-        case "failed": return redColor()
-        case "timedout": return redColor()
-        case "running": return blueColor()
-        case "canceled": return grayColor()
-        case "retried": return grayColor()
+        case .success: return greenColor()
+        case .fixed: return greenColor()
+        case .noTests: return redColor()
+        case .failed: return redColor()
+        case .timedout: return redColor()
+        case .running: return blueColor()
+        case .canceled: return grayColor()
+        case .retried: return grayColor()
         default:
-            print("unknown status" + build.status)
+            print("unknown status" + build.status.rawValue)
             return nil
         }
     }
